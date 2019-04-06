@@ -8,3 +8,7 @@ Protocol
 ## Setup
 
     pipenv install
+
+## Usage
+
+    pipenv run python server.py
