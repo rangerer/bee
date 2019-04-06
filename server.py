@@ -1,9 +1,11 @@
 import json
 from datetime import datetime
+import ssl
 
 import tornado.web
 import tornado.websocket
 import tornado.ioloop
+import tornado.httpserver
 
 transactions = []
 
@@ -69,5 +71,9 @@ if __name__ == "__main__":
         (r"/", MainHandler),
         (r"/ocpp", OCPPHandler)
     ])
-    app.listen(8888)
+    sslcontext = ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)
+    sslcontext.load_cert_chain(certfile="server.crt", keyfile="server.key")
+    sslcontext.load_verify_locations(cafile="client.crt")
+    server = tornado.httpserver.HTTPServer(app, ssl_options=sslcontext)
+    server.listen(4443)
     tornado.ioloop.IOLoop.current().start()
