@@ -51,6 +51,17 @@ class OCPPHandler(tornado.websocket.WebSocketHandler):
                 price = consumption / 1000 * 0.2
 
                 print("transaction {} consumed {} Wh for {} Euro".format(transactionsId, consumption, price))
+            elif Action == "DataTransfer":
+                if Payload["vendorId"] == "iso15118":
+                    if Payload["messageId"] == "GetCertificateStatus":
+                        response = {
+                            "status": "Accepted",
+                            "ocspResult": "..."
+                        }
+                    else:
+                        raise NotImplementedError
+                else:
+                    raise NotImplementedError
             else:
                 raise NotImplementedError
             
